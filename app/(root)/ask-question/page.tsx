@@ -1,7 +1,27 @@
-import React from "react";
+import { auth } from "@clerk/nextjs";
+import Question from "@/components/forms/Question";
+import { getUserById } from "@/lib/actions/user.action";
 
-const AskQuestion = () => {
-  return <div>Ask Question</div>;
+interface Props {}
+
+const Page = async (props: Props) => {
+  // const { userId } = auth();
+  // if (!userId) return null;
+  // const mongoUser = await getUserById({ userId });
+
+  const mongoUser = {
+    _id: "60f3b4d7a6c4b0001e00f3a0",
+  };
+
+  return (
+    <div>
+      <h1 className="h1-bold text-dark100_light900">Ask a Question</h1>
+
+      <div className="mt-9">
+        <Question type="create" mongoUserId={JSON.stringify(mongoUser._id)} />
+      </div>
+    </div>
+  );
 };
 
-export default AskQuestion;
+export default Page;

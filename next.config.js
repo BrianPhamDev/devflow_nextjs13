@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  experimental: {
+    mdxRs: true,
+    serverComponentsExternalPackages: ["mongoose"],
+    serverActions: true,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
