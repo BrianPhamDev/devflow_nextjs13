@@ -5,13 +5,10 @@ import { getUserById } from "@/lib/actions/user.action";
 interface Props {}
 
 const Page = async (props: Props) => {
-  // const { userId } = auth();
-  // if (!userId) return null;
-  // const mongoUser = await getUserById({ userId });
+  const { userId } = auth();
+  if (!userId) return null;
 
-  const mongoUser = {
-    _id: "60f3b4d7a6c4b0001e00f3a0",
-  };
+  const mongoUser = await getUserById({ userId });
 
   return (
     <div>
