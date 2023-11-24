@@ -30,8 +30,10 @@ const CommunityPage = async () => {
       </div>
 
       <section className="mt-12 flex flex-wrap gap-4">
-        {result.length > 0 ? (
-          result.map((user) => <UserCard key={user._id} user={user}></UserCard>)
+        {result.users.length > 0 ? (
+          result.users.map((user) => (
+            <UserCard key={user._id} user={user}></UserCard>
+          ))
         ) : (
           <NoResult
             title="No Users Found"

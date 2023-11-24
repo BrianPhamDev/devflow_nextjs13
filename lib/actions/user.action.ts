@@ -99,7 +99,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
     // const {page = 1, pageSize = 20, search, filter} = params;
     const users = await User.find({}).sort({ createdAt: -1 });
 
-    return users;
+    return { users };
   } catch (error) {
     console.log(error);
     throw error;
