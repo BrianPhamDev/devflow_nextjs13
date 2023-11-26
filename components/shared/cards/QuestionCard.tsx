@@ -50,7 +50,7 @@ const QuestionCard = ({
             </h3>
           </Link>
         </div>
-        // delete action button
+        {/* delete action button */}
       </div>
 
       <div className="mt-3.5 flex flex-wrap gap-2">

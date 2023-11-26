@@ -10,9 +10,11 @@ import { connectToDatabase } from "@/lib/mongoose";
 import type {
   CreateQuestionParams,
   EditQuestionParams,
+  GetQuestionByIdParams,
   GetQuestionsParams,
 } from "./shared.types";
 import User from "@/database/user.model";
+import { auth } from "@clerk/nextjs";
 
 export async function createQuestion(params: CreateQuestionParams) {
   try {
@@ -88,6 +90,31 @@ export async function getQuestions(params: GetQuestionsParams) {
       .populate({ path: "author", model: User });
 
     return { questions };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getQuestionById(params: GetQuestionByIdParams) {
+  try {
+    connectToDatabase();
+
+    const { questionId } = params;
+
+    const question = await Question.findById(questionId)
+      .populate({
+        path: "tags",
+        model: Tag,
+        select: "_id name",
+      })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id name clerkId picture",
+      });
+
+    return question;
   } catch (error) {
     console.log(error);
     throw error;
