@@ -3,7 +3,7 @@
 import * as z from "zod";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { answerSchema } from "@/lib/validations";
+import { AnswerSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import Image from "next/image";
@@ -16,20 +16,53 @@ import {
 } from "../ui/form";
 import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/ThemeProvider";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { usePathname } from "next/navigation";
 
-const Answer = () => {
+interface Props {
+  authorId: string;
+  questionId: string;
+  question: string;
+}
+
+const Answer = ({ authorId, questionId, question }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const editorRef = useRef(null);
   const { mode } = useTheme();
+  const path = usePathname();
 
-  const form = useForm<z.infer<typeof answerSchema>>({
-    resolver: zodResolver(answerSchema),
+  const form = useForm<z.infer<typeof AnswerSchema>>({
+    resolver: zodResolver(AnswerSchema),
     defaultValues: {
       answer: "",
     },
   });
 
-  const onSubmit = () => {};
+  const onSubmit = async (values: z.infer<typeof AnswerSchema>) => {
+    setIsSubmitting(true);
+
+    try {
+      await createAnswer({
+        content: values.answer,
+        author: JSON.parse(authorId),
+        question: JSON.parse(questionId),
+        path: path,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent("");
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="">
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
