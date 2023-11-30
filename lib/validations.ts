@@ -18,6 +18,6 @@ export const ProfileValidation = z.object({
   location: z.union([z.string().min(5).max(50), z.literal("")]),
 });
 
-export const answerSchema = z.object({
+export const AnswerSchema = z.object({
   answer: z.string().min(100),
 });
