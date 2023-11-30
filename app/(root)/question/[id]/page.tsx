@@ -13,12 +13,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
-import { NextPageContext } from "next";
-
-interface PageProps {
-  searchParams: any; // Replace 'any' with the appropriate type
-  params: any; // Replace 'any' with the appropriate type
-}
+import { PageProps } from "@/.next/types/app/layout";
 
 const page = async ({ searchParams, params }: PageProps) => {
   // params whatever in path
@@ -55,7 +50,16 @@ const page = async ({ searchParams, params }: PageProps) => {
             </p>
           </Link>
           <div className="flex justify-end">
-            <Votes></Votes>
+            <Votes
+              type="Question"
+              itemId={JSON.stringify(result._id)}
+              userId={JSON.stringify(mongoUser.users._id)}
+              upvotes={result.upvotes.length}
+              hasupVoted={result.upvotes.includes(mongoUser.users._id)}
+              downvotes={result.downvotes.length}
+              hasdownVoted={result.downvotes.includes(mongoUser.users._id)}
+              hasSaved={mongoUser.users?.saved.includes(result._id)}
+            ></Votes>
           </div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
