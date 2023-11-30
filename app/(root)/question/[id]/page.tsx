@@ -13,7 +13,14 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const page = async ({ searchParams, params }) => {
+import { NextPageContext } from "next";
+
+interface PageProps {
+  searchParams: any; // Replace 'any' with the appropriate type
+  params: any; // Replace 'any' with the appropriate type
+}
+
+const page = async ({ searchParams, params }: PageProps) => {
   // params whatever in path
   // searchParams whatever after ? in url
 
