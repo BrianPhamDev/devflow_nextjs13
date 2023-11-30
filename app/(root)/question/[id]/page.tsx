@@ -1,33 +1,18 @@
 import Answer from "@/components/forms/Answer";
-import AllAnswers from "@/components/shared/AllAnswers";
 import Metric from "@/components/shared/Metric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTag from "@/components/shared/RenderTag";
-import Votes from "@/components/shared/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
-import { getUserById } from "@/lib/actions/user.action";
 import { getTimestamp, getFormattedNumber } from "@/lib/utils";
-import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import React from "react";
 
 const page = async ({ searchParams, params }) => {
   // params whatever in path
   // searchParams whatever after ? in url
 
-  const { userId } = auth();
-  let mongoUser;
-
-  if (userId) {
-    mongoUser = await getUserById({ userId });
-  } else {
-    redirect("/login");
-  }
-
   const result = await getQuestionById({ questionId: params.id });
-  if (!result) return null;
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -47,9 +32,7 @@ const page = async ({ searchParams, params }) => {
               {result.author.name}
             </p>
           </Link>
-          <div className="flex justify-end">
-            <Votes></Votes>
-          </div>
+          <div className="flex justify-end">Voting</div>
         </div>
         <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full text-left">
           {result.title}
@@ -97,17 +80,7 @@ const page = async ({ searchParams, params }) => {
         {/* <EditDeleteAction /> */}
       </div>
 
-      <AllAnswers
-        questionId={result._id}
-        userId={mongoUser.users._id}
-        totalAnswers={result.answers.length}
-      ></AllAnswers>
-
-      <Answer
-        question={result.content}
-        authorId={JSON.stringify(mongoUser.users._id)}
-        questionId={JSON.stringify(result._id)}
-      ></Answer>
+      <Answer></Answer>
     </>
   );
 };
