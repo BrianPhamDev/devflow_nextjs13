@@ -5,6 +5,7 @@ import {
   downvoteQuestion,
   upvoteQuestion,
 } from "@/lib/actions/question.action";
+import { toggleSaveQuestion } from "@/lib/actions/user.action";
 import { getFormattedNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -33,7 +34,13 @@ const Votes = ({
 }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
-  const handleSave = () => {};
+  const handleSave = async () => {
+    await toggleSaveQuestion({
+      userId: JSON.parse(userId),
+      questionId: JSON.parse(itemId),
+      path: pathname,
+    });
+  };
   const handleVote = async (action: string) => {
     if (!userId) {
       return;
@@ -81,9 +88,6 @@ const Votes = ({
       return;
     }
   };
-
-  console.log(upvotes);
-  console.log(downvotes);
 
   return (
     <div className="flex gap-5">
@@ -143,9 +147,7 @@ const Votes = ({
           height={18}
           alt="star"
           className="cursor-pointer"
-          onClick={() => {
-            handleSave;
-          }}
+          onClick={handleSave}
         />
       )}
     </div>
