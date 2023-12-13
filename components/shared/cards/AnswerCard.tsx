@@ -2,6 +2,8 @@ import Link from "next/link";
 
 import Metric from "@/components/shared/Metric";
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteAction from "@/components/shared/EditDeleteAction";
 
 interface Props {
   clerkId?: string | null;
@@ -45,11 +47,11 @@ const AnswerCard = ({
           </h3>
         </div>
 
-        {/* <SignedIn>
+        <SignedIn>
           {showActionButtons && (
             <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
           )}
-        </SignedIn> */}
+        </SignedIn>
       </div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">

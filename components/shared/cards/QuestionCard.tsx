@@ -4,6 +4,7 @@ import { SignedIn } from "@clerk/nextjs";
 
 import RenderTag from "@/components/shared/RenderTag";
 import Metric from "@/components/shared/Metric";
+import EditDeleteAction from "@/components/shared/EditDeleteAction";
 
 import { getFormattedNumber, getTimestamp } from "@/lib/utils";
 
@@ -50,7 +51,15 @@ const QuestionCard = ({
             </h3>
           </Link>
         </div>
-        {/* delete action button */}
+
+        <SignedIn>
+          {showActionButtons && (
+            <EditDeleteAction
+              type="Question"
+              itemId={JSON.stringify(_id)}
+            ></EditDeleteAction>
+          )}
+        </SignedIn>
       </div>
 
       <div className="mt-3.5 flex flex-wrap gap-2">
