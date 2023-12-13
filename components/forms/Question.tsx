@@ -28,7 +28,7 @@ import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { QuestionValidation } from "@/lib/validations";
 
 interface Props {
-  type: string;
+  type?: string;
   mongoUserId: string;
   questionDetails?: string;
 }
