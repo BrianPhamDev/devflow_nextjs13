@@ -2,18 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 
 import RenderTag from "@/components/shared/RenderTag";
+import { getHotQuestions } from "@/lib/actions/question.action";
 
 const RightSidebar = async () => {
-  const hotQuestions: any = [
-    {
-      _id: "1",
-      title: "javascript",
-    },
-    {
-      _id: "2",
-      title: "nextjs",
-    },
-  ];
   const popularTags: any = [
     {
       _id: "1",
@@ -26,6 +17,8 @@ const RightSidebar = async () => {
       totalQuestions: 50,
     },
   ];
+
+  const hotQuestions = await getHotQuestions();
 
   return (
     <section className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0 flex h-screen flex-col overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden lg:w-[350px]">
