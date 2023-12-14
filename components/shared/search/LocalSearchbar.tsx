@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 
 interface CustomInputProps {
@@ -27,6 +28,7 @@ const LocalSearchbar = ({
   const searchParams = useSearchParams();
 
   const query = searchParams.get("q");
+
   const [search, setSearch] = useState(query || "");
 
   useEffect(() => {
@@ -52,7 +54,7 @@ const LocalSearchbar = ({
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [search, router, route, pathname, searchParams, query]);
+  }, [search, route, pathname, router, searchParams, query]);
 
   return (
     <div

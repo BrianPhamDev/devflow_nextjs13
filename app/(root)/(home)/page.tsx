@@ -1,16 +1,28 @@
-import Filter from "@/components/shared/Filter";
-import NoResult from "@/components/shared/NoResult";
-import QuestionCard from "@/components/shared/cards/QuestionCard";
-import HomeFilters from "@/components/shared/home/HomeFilters";
-import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-import { Button } from "@/components/ui/button";
-import { HomePageFilters } from "@/constants/filters";
-import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-export default async function Home() {
-  const result = await getQuestions({});
+import { auth } from "@clerk/nextjs";
 
+import { Button } from "@/components/ui/button";
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
+import Filter from "@/components/shared/Filter";
+import NoResult from "@/components/shared/NoResult";
+
+import { getQuestions } from "@/lib/actions/question.action";
+
+import { HomePageFilters } from "@/constants/filters";
+
+import type { SearchParamsProps } from "@/types";
+import HomeFilters from "@/components/shared/home/HomeFilters";
+import QuestionCard from "@/components/shared/cards/QuestionCard";
+
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const { userId: clerkId } = auth();
+
+  const result = await getQuestions({
+    searchQuery: searchParams.q,
+  });
+
+  console.log(result.questions.length);
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -47,6 +59,7 @@ export default async function Home() {
             <QuestionCard
               key={question._id}
               _id={question._id}
+              clerkId={clerkId}
               title={question.title}
               tags={question.tags}
               author={question.author}
@@ -60,8 +73,8 @@ export default async function Home() {
           <NoResult
             title="No Questions Found"
             description="Be the first to break the silence! 🚀 Ask a Question and kickstart the
-      discussion. our query could be the next big thing others learn from. Get
-      involved! 💡"
+          discussion. our query could be the next big thing others learn from. Get
+          involved! 💡"
             link="/ask-question"
             linkTitle="Ask a Question"
           />
