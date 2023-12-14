@@ -37,7 +37,6 @@ const QuestionCard = ({
   clerkId,
 }: QuestionProps) => {
   const showActionButtons = clerkId && clerkId === author.clerkId;
-
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
@@ -54,10 +53,7 @@ const QuestionCard = ({
 
         <SignedIn>
           {showActionButtons && (
-            <EditDeleteAction
-              type="Question"
-              itemId={JSON.stringify(_id)}
-            ></EditDeleteAction>
+            <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
           )}
         </SignedIn>
       </div>
@@ -74,7 +70,7 @@ const QuestionCard = ({
           alt="user"
           value={author.name}
           title={` • asked ${getTimestamp(createdAt)}`}
-          href={`/profile/${author._id}`}
+          href={`/profile/${author.clerkId}`}
           isAuthor
           textStyles="body-medium text-dark400_light700"
         />

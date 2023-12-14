@@ -88,11 +88,11 @@ export async function getUserById(params: { userId: string }) {
 
     const { userId } = params;
 
-    const users = await User.findOne({
+    const user = await User.findOne({
       clerkId: userId,
     });
 
-    return { users };
+    return user;
   } catch (error) {
     console.log(error);
     throw error;
