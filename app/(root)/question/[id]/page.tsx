@@ -28,7 +28,9 @@ const page = async ({ searchParams, params }: PageProps) => {
     redirect("/login");
   }
 
-  const result = await getQuestionById({ questionId: params.id });
+  const result = await getQuestionById({
+    questionId: params.id,
+  });
   if (!result) return null;
   return (
     <>
@@ -112,6 +114,8 @@ const page = async ({ searchParams, params }: PageProps) => {
         questionId={result._id}
         userId={mongoUser._id}
         totalAnswers={result.answers.length}
+        filter={searchParams?.filter}
+        page={searchParams?.page}
       ></AllAnswers>
 
       <Answer

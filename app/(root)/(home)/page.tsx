@@ -20,9 +20,9 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 
   const result = await getQuestions({
     searchQuery: searchParams.q,
+    filter: searchParams.filter,
   });
 
-  console.log(result.questions.length);
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
