@@ -3,20 +3,10 @@ import Image from "next/image";
 
 import RenderTag from "@/components/shared/RenderTag";
 import { getHotQuestions } from "@/lib/actions/question.action";
+import { getTopPopularTags } from "@/lib/actions/tag.action";
 
 const RightSidebar = async () => {
-  const popularTags: any = [
-    {
-      _id: "1",
-      name: "javascript",
-      totalQuestions: 100,
-    },
-    {
-      _id: "2",
-      name: "nextjs",
-      totalQuestions: 50,
-    },
-  ];
+  const popularTags = await getTopPopularTags();
 
   const hotQuestions = await getHotQuestions();
 
