@@ -14,6 +14,7 @@ import { HomePageFilters } from "@/constants/filters";
 import type { SearchParamsProps } from "@/types";
 import HomeFilters from "@/components/shared/home/HomeFilters";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
+import Pagination from "@/components/shared/Pagination";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();
@@ -21,6 +22,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
   const result = await getQuestions({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
@@ -79,6 +81,12 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             linkTitle="Ask a Question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        ></Pagination>
       </div>
     </>
   );

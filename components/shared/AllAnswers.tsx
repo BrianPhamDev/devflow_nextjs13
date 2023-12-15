@@ -7,6 +7,7 @@ import { getTimestamp } from "@/lib/utils";
 import Image from "next/image";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
+import Pagination from "./Pagination";
 
 interface Props {
   questionId: string;
@@ -28,6 +29,7 @@ const AllAnswers = async ({
     page: page ? +page : 1,
     sortBy: filter,
   });
+
   return (
     <div className="mt-11 mb-10">
       <div className="flex items-center justify-between">
@@ -77,6 +79,12 @@ const AllAnswers = async ({
             {/* <EditDeleteAction /> */}
           </article>
         ))}
+      </div>
+      <div className="mt-10">
+        <Pagination
+          pageNumber={page ? +page : 1}
+          isNext={result.isNextAnswers}
+        ></Pagination>
       </div>
     </div>
   );
