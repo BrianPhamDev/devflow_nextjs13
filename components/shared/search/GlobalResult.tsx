@@ -58,7 +58,7 @@ const GlobalResult = () => {
       <GlobalFilters />
       <div className="my-5 h-[1px] bg-light-700/50 dark:bg-dark-500/50" />
       <div className="space-y-5">
-        <p className="text-dark400_light900 paragraph-semibold px-5">
+        <p className="text-dark400_light900 paragraph-semibold px-5 mb-2">
           Top Match
         </p>
       </div>

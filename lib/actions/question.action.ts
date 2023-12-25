@@ -33,11 +33,17 @@ export async function createQuestion(params: CreateQuestionParams) {
       content,
       author,
     });
-
+    let newTagsCounter = 0;
     const tagDocuments = [];
 
     // create the tags or get them if they already exist
     for (const tag of tags) {
+      const isTagAlreadyExist = await Tag.exists({
+        name: { $regex: new RegExp(`^${tag}$`, "i") },
+      });
+
+      if (!isTagAlreadyExist) newTagsCounter++;
+
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
         { $setOnInsert: { name: tag }, $push: { questions: question._id } },
@@ -51,9 +57,21 @@ export async function createQuestion(params: CreateQuestionParams) {
       $push: { tags: { $each: tagDocuments } },
     });
 
-    // todo: create an interaction record for the user's ask_question action
+    // create an interaction record for the user's ask_question action
+    await Interaction.create({
+      user: author,
+      action: "ask_question",
+      question: question._id,
+      tags: tagDocuments,
+    });
 
-    // todo: increment author's reputation by +S for creating a question
+    // increment author's reputation by +S for creating a question
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 5 } });
+    if (newTagsCounter > 0) {
+      await User.findByIdAndUpdate(author, {
+        $inc: { reputation: newTagsCounter * 3 },
+      });
+    }
 
     revalidatePath(path);
   } catch (error) {
