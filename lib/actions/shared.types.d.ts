@@ -70,7 +70,12 @@ export interface GetUserByIdParams extends UserId {}
 
 export interface GetAllUsersParams extends Searchable {}
 
-export interface GetAllJobsParams extends Searchable {}
+export interface GetJobsParams extends Searchable {
+  location?: string;
+  remote?: boolean | string;
+  wage?: boolean | string;
+  skills?: boolean | string;
+}
 
 export interface UpdateUserParams extends ClerkId, Path {
   updateData: Partial<IUser>;
@@ -181,4 +186,11 @@ export interface RecommendedParams
 export interface JobFilterParams {
   query: string;
   page: string;
+}
+
+export interface GetFormattedSalaryParams {
+  min: number;
+  max: number;
+  currency: string;
+  period: string;
 }

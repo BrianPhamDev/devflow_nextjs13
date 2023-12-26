@@ -41,3 +41,10 @@ export const GlobalSearchFilters: FilterProps[] = [
   { name: "User", value: "user" },
   { name: "Tag", value: "tag" },
 ];
+
+export const JobPageFilters: FilterProps[] = [
+  { name: "Full-time", value: "fulltime" },
+  { name: "Part-time", value: "parttime" },
+  { name: "Contractor", value: "contractor" },
+  { name: "Internship", value: "intern" },
+];
