@@ -26,6 +26,7 @@ import { useTheme } from "@/context/ThemeProvider";
 
 import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { QuestionValidation } from "@/lib/validations";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   type?: string;
@@ -79,9 +80,19 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
         router.push("/");
       }
     } catch (error) {
+      toast({
+        title: `Error ${type === "Edit" ? "editing" : "posting"} question ⚠️`,
+        variant: "destructive",
+      });
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      toast({
+        title: `Question ${
+          type === "Edit" ? "edited" : "posted"
+        } successfully 🎉`,
+        variant: "default",
+      });
     }
   }
 
