@@ -6,12 +6,14 @@ import {
   AnswerVoteParams,
   CreateAnswerParams,
   DeleteAnswerParams,
+  EditAnswerParams,
   GetAnswersParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Interaction from "@/database/interaction.model";
 import User from "@/database/user.model";
+import { redirect } from "next/navigation";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
@@ -185,6 +187,29 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
     await Interaction.deleteMany({ answer: answerId });
 
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function editAnswer(params: EditAnswerParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId, content, path } = params;
+
+    const answer = await Answer.findById(answerId);
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    answer.content = content;
+
+    await answer.save();
+
+    redirect(path);
   } catch (error) {
     console.log(error);
     throw error;
