@@ -15,6 +15,11 @@ import type { SearchParamsProps } from "@/types";
 import HomeFilters from "@/components/shared/home/HomeFilters";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import Pagination from "@/components/shared/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home — DevOverflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();

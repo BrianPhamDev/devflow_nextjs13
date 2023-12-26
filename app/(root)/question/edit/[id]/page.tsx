@@ -5,7 +5,20 @@ import Question from "@/components/forms/Question";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 
-import type { ParamsProps } from "@/types";
+import type { ParamsProps, URLProps } from "@/types";
+import type { Metadata } from "next";
+import { getTagById } from "@/lib/actions/tag.action";
+
+export async function generateMetadata({
+  params,
+}: Omit<URLProps, "searchParams">): Promise<Metadata> {
+  const tag = await getTagById({ tagId: params.id });
+
+  return {
+    title: `Posts by tag '${tag.name}' — DevOverflow`,
+    description: tag.description || `Questions tagged with ${tag.name}`,
+  };
+}
 
 const Page = async ({ params }: ParamsProps) => {
   const { userId } = auth();

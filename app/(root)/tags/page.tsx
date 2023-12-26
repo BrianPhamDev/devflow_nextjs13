@@ -9,6 +9,11 @@ import { getAllTags } from "@/lib/actions/tag.action";
 import { TagFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tags — DevOverflow",
+};
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllTags({

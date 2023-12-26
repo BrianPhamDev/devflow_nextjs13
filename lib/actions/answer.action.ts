@@ -215,3 +215,21 @@ export async function editAnswer(params: EditAnswerParams) {
     throw error;
   }
 }
+
+export async function getAnswerById(params: GetAnswerByIdParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId } = params;
+
+    const answer = await Answer.findById(answerId).populate(
+      "author",
+      "_id clerkId name picture"
+    );
+
+    return answer;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
