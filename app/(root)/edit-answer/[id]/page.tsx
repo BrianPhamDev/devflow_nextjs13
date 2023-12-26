@@ -8,6 +8,7 @@ import { getAnswerById } from "@/lib/actions/answer.action";
 
 import type { ParamsProps } from "@/types";
 import type { Metadata } from "next";
+import { getUserById } from "@/lib/actions/user.action";
 
 export const metadata: Metadata = {
   title: "Edit Answer — DevOverflow",
@@ -17,6 +18,9 @@ const Page = async ({ params }: ParamsProps) => {
   const { userId } = auth();
 
   if (!userId) return null;
+
+  const mongoUser = await getUserById({ userId });
+  if (!mongoUser?.onboarded) redirect("/onboarding");
 
   const result = await getAnswerById({ answerId: params.id });
 

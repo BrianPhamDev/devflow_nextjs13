@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs";
 import Question from "@/components/forms/Question";
 import { getUserById } from "@/lib/actions/user.action";
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Ask a Question — DevOverflow",
@@ -14,6 +15,8 @@ const Page = async (props: Props) => {
   if (!userId) return null;
 
   const mongoUser = await getUserById({ userId });
+
+  if (!mongoUser?.onboarded) redirect("/onboarding");
 
   return (
     <div>
