@@ -11,6 +11,7 @@ import { getFormattedNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   type: string;
@@ -41,11 +42,22 @@ const Votes = ({
       questionId: JSON.parse(itemId),
       path: pathname,
     });
+
+    toast({
+      title: `Question ${
+        !hasSaved ? "saved" : "removed from your collection"
+      } 🎉`,
+      variant: !hasSaved ? "default" : "destructive",
+    });
   };
   const handleVote = async (action: string) => {
     if (!userId) {
-      return;
+      return toast({
+        title: "Not signed in",
+        description: "You need to be signed in to vote ⚠️",
+      });
     }
+
     if (action === "upvote") {
       if (type === "Question") {
         await upvoteQuestion({
@@ -64,9 +76,13 @@ const Votes = ({
           path: pathname,
         });
       }
-      //todo: show a toast
-      return;
+
+      toast({
+        title: `Upvote ${!hasupVoted ? "added" : "removed"} 🎉`,
+        variant: !hasupVoted ? "default" : "destructive",
+      });
     }
+
     if (action === "downvote") {
       if (type === "Question") {
         await downvoteQuestion({
@@ -85,8 +101,11 @@ const Votes = ({
           path: pathname,
         });
       }
-      //todo: show a toast
-      return;
+
+      toast({
+        title: `Downvote ${!hasdownVoted ? "added" : "removed"} 🎉`,
+        variant: !hasdownVoted ? "default" : "destructive",
+      });
     }
   };
   useEffect(() => {

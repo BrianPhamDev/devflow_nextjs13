@@ -6,11 +6,15 @@ import {
   AnswerVoteParams,
   CreateAnswerParams,
   DeleteAnswerParams,
+  EditAnswerParams,
+  GetAnswerByIdParams,
   GetAnswersParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Interaction from "@/database/interaction.model";
+import User from "@/database/user.model";
+import { redirect } from "next/navigation";
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
@@ -25,10 +29,20 @@ export async function createAnswer(params: CreateAnswerParams) {
     });
 
     //find the question and push the new answer to question array
-    await Question.findByIdAndUpdate(question, {
+    const questionObj = await Question.findByIdAndUpdate(question, {
       $push: { answers: newAnswer._id },
     });
-    //todo: add interaction
+    // add interaction
+    await Interaction.create({
+      user: author,
+      action: "answer",
+      question,
+      answer: newAnswer._id,
+      tags: questionObj.tag,
+    });
+
+    // increment author's reputation by 10
+    await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
     revalidatePath(path);
   } catch (error) {
@@ -174,6 +188,47 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
     await Interaction.deleteMany({ answer: answerId });
 
     revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function editAnswer(params: EditAnswerParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId, content, path } = params;
+
+    const answer = await Answer.findById(answerId);
+
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    answer.content = content;
+
+    await answer.save();
+
+    redirect(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getAnswerById(params: GetAnswerByIdParams) {
+  try {
+    connectToDatabase();
+
+    const { answerId } = params;
+
+    const answer = await Answer.findById(answerId).populate(
+      "author",
+      "_id clerkId name picture"
+    );
+
+    return answer;
   } catch (error) {
     console.log(error);
     throw error;

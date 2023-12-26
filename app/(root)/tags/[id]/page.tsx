@@ -2,10 +2,23 @@ import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-import { getQuestionByTagId } from "@/lib/actions/tag.action";
+import { getQuestionByTagId, getTagById } from "@/lib/actions/tag.action";
 import { URLProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import React from "react";
+
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: Omit<URLProps, "searchParams">): Promise<Metadata> {
+  const tag = await getTagById({ tagId: params.id });
+
+  return {
+    title: `Posts by tag '${tag.name}' — DevOverflow`,
+    description: tag.description || `Questions tagged with ${tag.name}`,
+  };
+}
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();

@@ -7,23 +7,48 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 
 import { HomePageFilters } from "@/constants/filters";
 
 import type { SearchParamsProps } from "@/types";
-import HomeFilters from "@/components/shared/home/HomeFilters";
+import HomeFilters from "@/components/shared/Filters";
 import QuestionCard from "@/components/shared/cards/QuestionCard";
 import Pagination from "@/components/shared/Pagination";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home — DevOverflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();
 
-  const result = await getQuestions({
-    searchQuery: searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ? +searchParams.page : 1,
-  });
+  let result;
+
+  if (searchParams?.filter === "recommended") {
+    if (clerkId) {
+      result = await getRecommendedQuestions({
+        userId: clerkId,
+        searchQuery: searchParams.q,
+        page: searchParams.page ? +searchParams.page : 1,
+      });
+    } else {
+      result = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else {
+    result = await getQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? +searchParams.page : 1,
+    });
+  }
 
   return (
     <>
@@ -53,7 +78,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         />
       </div>
 
-      <HomeFilters />
+      <HomeFilters filters={HomePageFilters} />
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {result.questions.length > 0 ? (

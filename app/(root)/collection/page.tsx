@@ -1,25 +1,38 @@
+import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+
+import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import Filter from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
-import QuestionCard from "@/components/shared/cards/QuestionCard";
-import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
+
+import { getSavedQuestions, getUserById } from "@/lib/actions/user.action";
+
 import { QuestionFilters } from "@/constants/filters";
-import { getSavedQuestions } from "@/lib/actions/user.action";
-import { SearchParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs";
-import React from "react";
 
-const Page = async ({ searchParams }: SearchParamsProps) => {
-  const { userId } = auth();
+import type { SearchParamsProps } from "@/types";
+import type { Metadata } from "next";
+import QuestionCard from "@/components/shared/cards/QuestionCard";
 
-  if (!userId) return null;
+export const metadata: Metadata = {
+  title: "Collection — DevOverflow",
+};
+
+export default async function Collection({ searchParams }: SearchParamsProps) {
+  const { userId: clerkId } = auth();
+
+  if (!clerkId) return null;
+
+  const mongoUser = await getUserById({ userId: clerkId });
+  if (!mongoUser?.onboarded) redirect("/onboarding");
 
   const result = await getSavedQuestions({
-    clerkId: userId,
+    clerkId,
     searchQuery: searchParams.q,
     filter: searchParams.filter,
     page: searchParams.page ? +searchParams.page : 1,
   });
+
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
@@ -44,7 +57,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
             <QuestionCard
               key={question._id}
               _id={question._id}
-              clerkId={userId}
+              clerkId={clerkId}
               title={question.title}
               tags={question.tags}
               author={question.author}
@@ -72,6 +85,4 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
       </div>
     </>
   );
-};
-
-export default Page;
+}
