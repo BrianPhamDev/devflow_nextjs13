@@ -1,22 +1,24 @@
-/* eslint-disable no-unused-vars */
 "use client";
 
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
-import { HomePageFilters } from "@/constants/filters";
-import { useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery } from "@/lib/utils";
+
+import { HomePageFilters } from "@/constants/filters";
 
 const HomeFilters = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const [active, setActive] = useState("");
 
   const handleTypeClick = (item: string) => {
     if (active === item) {
       setActive("");
+
       const newUrl = formUrlQuery({
         params: searchParams.toString(),
         key: "filter",
@@ -26,6 +28,7 @@ const HomeFilters = () => {
       router.push(newUrl, { scroll: false });
     } else {
       setActive(item);
+
       const newUrl = formUrlQuery({
         params: searchParams.toString(),
         key: "filter",
